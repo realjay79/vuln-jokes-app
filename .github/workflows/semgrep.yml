@@ -28,6 +28,7 @@ jobs:
           semgrep scan \
             --config "p/owasp-top-ten" \
             --config "p/react" \
+            --config "p/javascript" \
             --config "p/golang" \
             --severity ERROR \
             --json --output semgrep-sast.json \
