@@ -1,0 +1,39 @@
+name: OWASP ZAP DAST Scan
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Run ZAP DAST Scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup environment and run app
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nodejs npm golang-go
+
+          # Run backend
+          cd backend
+          nohup go run main.go > backend.log 2>&1 &
+
+          # Run frontend
+          cd ../frontend
+          npm install
+          nohup npm start > frontend.log 2>&1 &
+
+          # Wait for services to spin up
+          sleep 20
+
+      - name: Run ZAP scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: 'http://localhost:3000'
+          fail_action: false
