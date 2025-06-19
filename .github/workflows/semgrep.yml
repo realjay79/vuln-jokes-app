@@ -1,4 +1,4 @@
-name: Semgrep SAST & SCA Scan
+name: Semgrep SAST & SCA
 
 on:
   push:
@@ -8,28 +8,42 @@ on:
 
 jobs:
   semgrep:
-    name: Semgrep SAST & SCA
     runs-on: ubuntu-latest
+    name: Semgrep SAST & SCA
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
 
       - name: Install Semgrep
         run: pip install semgrep
 
+      # 🛡️ SAST Scan (code)
       - name: Run Semgrep SAST (Go + React)
         run: |
-          semgrep scan --config "p/owasp-top-ten" frontend backend --error
+          semgrep scan \
+            --config "p/owasp-top-ten" \
+            --config "p/react" \
+            --config "p/golang" \
+            --severity ERROR \
+            --json --output semgrep-sast.json \
+            frontend backend
 
-      - name: Run Semgrep Supply Chain (SCA)
+      - name: Upload SAST Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-sast-report
+          path: semgrep-sast.json
+
+      # 🧩 SCA Scan (dependencies)
+      - name: Run Semgrep SCA
         run: |
           semgrep supply-chain scan --json --output semgrep-sca.json || true
 
-      - name: Upload SCA Report Artifact
+      - name: Upload SCA Report
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-sca-report
