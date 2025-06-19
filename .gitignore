@@ -1,0 +1,39 @@
+# === Node (React frontend) ===
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.DS_Store
+frontend/npm-debug.log
+
+# === Go (backend) ===
+backend/bin/
+backend/*.log
+backend/.DS_Store
+backend/go.sum
+backend/go.mod
+
+# === Logs ===
+*.log
+nohup.out
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Terraform ===
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.*
+terraform/.terraform.lock.hcl
+terraform/planfile
+terraform/crash.log
+
+# === Vault ===
+vault/*.hcl
+vault/*.json
+vault/*.policy
+vault/.vault-token
+
+# === GitHub Actions Cache ===
+.github/workflows/*.bak
+.github/workflows/*.swp
