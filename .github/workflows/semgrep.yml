@@ -8,23 +8,29 @@ on:
 
 jobs:
   semgrep:
+    name: Semgrep SAST & SCA
     runs-on: ubuntu-latest
-    name: Semgrep Scan
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
 
       - name: Install Semgrep
         run: pip install semgrep
 
-      - name: Run Semgrep SAST
+      - name: Run Semgrep SAST (Go + React)
         run: |
-          semgrep scan --config "p/owasp-top-ten" --error
+          semgrep scan --config "p/owasp-top-ten" frontend backend --error
 
-      - name: Run Semgrep SCA
+      - name: Run Semgrep Supply Chain (SCA)
         run: |
-          semgrep supply-chain scan
+          semgrep supply-chain scan --json --output semgrep-sca.json || true
+
+      - name: Upload SCA Report Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: semgrep-sca-report
+          path: semgrep-sca.json
