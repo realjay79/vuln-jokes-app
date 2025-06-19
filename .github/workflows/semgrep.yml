@@ -21,8 +21,9 @@ jobs:
       - name: Install Semgrep
         run: pip install semgrep
 
-      # 🛡️ SAST Scan (code)
       - name: Run Semgrep SAST (Go + React)
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
         run: |
           semgrep scan \
             --config "p/owasp-top-ten" \
@@ -38,8 +39,9 @@ jobs:
           name: semgrep-sast-report
           path: semgrep-sast.json
 
-      # 🧩 SCA Scan (dependencies)
       - name: Run Semgrep SCA
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
         run: |
           semgrep supply-chain scan --json --output semgrep-sca.json || true
 
