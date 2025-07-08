@@ -36,9 +36,10 @@ jobs:
       #############################################
       - name: Run SAST Scan (Custom Rules)
         run: |
-          semgrep ci \
+          semgrep scan \
             --config jokes-vuln-rules.yml \
             --metrics=off \
+            --upload \
             --json > semgrep-sast-report.json
 
       - name: Upload SAST Report
@@ -55,6 +56,7 @@ jobs:
           semgrep ci \
             --config auto \
             --metrics=off \
+            --upload \
             --json > semgrep-sca-report.json
 
       - name: Upload SCA Report
