@@ -34,33 +34,14 @@ jobs:
       #############################################
       # 🛡️ SAST Scan — Custom Rules for Code
       #############################################
-      - name: Run SAST Scan (Custom Rules)
-        run: |
-          semgrep scan \
-            --config jokes-vuln-rules.yml \
-            --metrics=off \
-            --upload \
-            --json > semgrep-sast-report.json
-
-      - name: Upload SAST Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: semgrep-sast-report
-          path: semgrep-sast-report.json
-
-      #############################################
-      # 📦 SCA Scan — Dependency Vulnerabilities
-      #############################################
-      - name: Run SCA Scan
+      - name: Run SAST CI (SAST + SCA)
         run: |
           semgrep ci \
-            --config auto \
             --metrics=off \
-            --upload \
-            --json > semgrep-sca-report.json
+            --json > semgrep-ci-report.json
 
-      - name: Upload SCA Report
+      - name: Upload Semgrep CI Report
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep-sca-report
-          path: semgrep-sca-report.json
+          name: semgrep-ci-report
+          path: semgrep-ci-report.json
