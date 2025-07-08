@@ -54,7 +54,6 @@ jobs:
         run: |
           semgrep ci \
             --config auto \
-            --dependency \
             --metrics=off \
             --json > semgrep-sca-report.json
 
