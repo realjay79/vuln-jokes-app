@@ -38,7 +38,6 @@ jobs:
         run: |
           semgrep ci \
             --config jokes-vuln-rules.yml \
-            --enable-non-beta \
             --metrics=off \
             --json > semgrep-sast-report.json
 
