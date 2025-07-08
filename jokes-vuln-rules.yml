@@ -1,0 +1,47 @@
+rules:
+  # 1. XSS via dangerouslySetInnerHTML
+  - id: react-dangerouslysetinnerhtml
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: "Using dangerouslySetInnerHTML opens the door to XSS."
+    pattern: "<$TAG dangerouslySetInnerHTML={{ __html: $HTML }} />"
+
+  # 2. SSRF via http.Get in Go (no URL validation)
+  - id: go-unvalidated-http-get
+    languages: [go]
+    severity: ERROR
+    message: "Unvalidated http.Get may allow SSRF — consider validating or allowlisting hostnames."
+    pattern: |
+      resp, err := http.Get($URL)
+
+  # 3. Insecure Go HTTP server (no TLS)
+  - id: go-http-no-tls
+    languages: [go]
+    severity: WARNING
+    message: "HTTP server should use TLS. Consider using ListenAndServeTLS."
+    pattern: |
+      http.ListenAndServe(":$PORT", $HANDLER)
+
+  # 4. CSRF-prone fetch with credentials included
+  - id: react-csrf-fetch
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: "Fetch with 'credentials: include' is CSRF-prone. Do you have proper CSRF protection?"
+    pattern: |
+      fetch($URL, {
+        ...,
+        credentials: "include",
+        ...
+      })
+
+  # 5. Hardcoded secrets (basic check for fetch/post with sensitive-looking values)
+  - id: hardcoded-secret-post
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: "Possible hardcoded secret or sensitive post body. Consider using Vault or env vars."
+    pattern: |
+      fetch($URL, {
+        method: "POST",
+        body: $BODY,
+        ...
+      })

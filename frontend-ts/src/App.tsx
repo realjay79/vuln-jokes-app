@@ -5,16 +5,22 @@ function App() {
   const [jokeId, setJokeId] = useState("");
   const [jokeResult, setJokeResult] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch(`http://localhost:8080/joke?id=${jokeId}`, {
-      method: "GET",
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`http://localhost:8080/joke?id=${jokeId}`, {
+        method: "GET",
+        credentials: "include", // 🍪 CSRF-prone
+      });
 
-    const data = await response.text();
-    setJokeResult(data);
+      const data = await response.text();
+
+      // XSS-prone: directly injecting HTML
+      setJokeResult(data);
+    } catch (error) {
+      console.error("Error fetching joke:", error);
+    }
   };
 
   return (

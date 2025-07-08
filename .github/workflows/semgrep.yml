@@ -1,52 +1,66 @@
-name: Semgrep SAST & SCA
+name: Semgrep SAST and SCA
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
   semgrep:
+    name: Run Semgrep SAST and SCA
     runs-on: ubuntu-latest
-    name: Semgrep SAST & SCA
+
+    permissions:
+      contents: read
+      security-events: write
+
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
 
       - name: Install Semgrep
-        run: pip install semgrep
-
-      - name: Run Semgrep SAST (Go + React)
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
         run: |
-          semgrep scan \
-            --config "p/owasp-top-ten" \
-            --config "p/react" \
-            --config "p/javascript" \
-            --config "p/golang" \
-            --json --output semgrep-sast.json \
-            frontend backend
+          python3 -m pip install --upgrade pip
+          pip3 install semgrep
+
+      #############################################
+      # 🛡️ SAST Scan — Custom Rules for Code
+      #############################################
+      - name: Run SAST Scan (Custom Rules)
+        run: |
+          semgrep ci \
+            --config jokes-vuln-rules.yml \
+            --enable-non-beta \
+            --metrics=off \
+            --json > semgrep-sast-report.json
 
       - name: Upload SAST Report
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-sast-report
-          path: semgrep-sast.json
+          path: semgrep-sast-report.json
 
-      - name: Run Semgrep SCA
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      #############################################
+      # 📦 SCA Scan — Dependency Vulnerabilities
+      #############################################
+      - name: Run SCA Scan
         run: |
-          semgrep supply-chain scan --json --output semgrep-sca.json || true
+          semgrep ci \
+            --config auto \
+            --dependency \
+            --metrics=off \
+            --json > semgrep-sca-report.json
 
       - name: Upload SCA Report
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-sca-report
-          path: semgrep-sca.json
+          path: semgrep-sca-report.json
