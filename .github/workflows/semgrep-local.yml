@@ -39,7 +39,6 @@ jobs:
         run: |
           semgrep scan \
             --config auto \
-            --metrics=off \
             --json > semgrep-sca-report.json
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
