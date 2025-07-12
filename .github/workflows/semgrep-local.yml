@@ -1,0 +1,51 @@
+name: Semgrep Local Scan (SAST + SCA)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+  pull_request:
+
+jobs:
+  semgrep-local:
+    runs-on: ubuntu-latest
+    name: Semgrep Local Rules
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Semgrep
+        run: |
+          pip install semgrep
+
+      - name: Run Semgrep SAST (Local Rules)
+        run: |
+          semgrep scan \
+            --config jokes-vuln-rules.yml \
+            --metrics=off \
+            --enable-non-beta \
+            --json > semgrep-sast-report.json
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Upload SAST Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-sast-report
+          path: semgrep-sast-report.json
+
+      - name: Run Semgrep SCA (Auto)
+        run: |
+          semgrep scan \
+            --config auto \
+            --metrics=off \
+            --json > semgrep-sca-report.json
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Upload SCA Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-sca-report
+          path: semgrep-sca-report.json
