@@ -24,7 +24,6 @@ jobs:
           semgrep scan \
             --config jokes-vuln-rules.yml \
             --metrics=off \
-            --enable-non-beta \
             --json > semgrep-sast-report.json
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
