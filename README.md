@@ -50,6 +50,7 @@ GET http://localhost:8080/joke?id=123
 
 ```
 Example Response: 
+```
 json
 {
   "id": 123,
@@ -57,8 +58,6 @@ json
   "setup": "Why did the scarecrow win an award?",
   "punchline": "Because he was outstanding in his field."
 }
-
-
 
 **Security Notes**
 This repository contains the fixed version of the application. The vulnerabilities documented in the blog series have been remediated.
