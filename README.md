@@ -20,7 +20,7 @@ A deliberately vulnerable (and then fixed) React + Go application, built to demo
     git clone https://github.com/realjay79/vuln-jokes-app.git
     cd vuln-jokes-app
 
-**2. Run the Backend (Go)
+**2. Run the Backend (Go)**
 
 bash
 cd backend
@@ -67,7 +67,7 @@ To replicate the security scans discussed in the blog series:
 
 **Semgrep (SAST/SCA):**
 
-# In the root directory
+**In the root directory**
 semgrep --config p/default --config p/security-audit ./backend ./frontend
 (Note: Using local custom rules will provide more thorough results, as noted in the series.)
 
