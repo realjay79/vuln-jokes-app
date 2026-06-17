@@ -28,8 +28,8 @@ go mod download
 go run main.go
 The API server will start on http://localhost:8080.
 
-**3. Run the Frontend (React)
-**Open a new terminal window.
+**3. Run the Frontend (React)**
+Open a new terminal window.
 
 bash
 cd frontend
@@ -40,8 +40,8 @@ The React development server will start on http://localhost:3000.
 Open the App
 Navigate to http://localhost:3000 in your browser. You should see the Jokes App interface.
 
-**API Endpoints
-**Method	Endpoint	Description
+**API Endpoints**
+Method	Endpoint	Description
 GET	/joke?id={joke_id}	Fetches a joke by ID from the Official Joke API
 Example Request:
 
@@ -56,24 +56,22 @@ json
   "setup": "Why did the scarecrow win an award?",
   "punchline": "Because he was outstanding in his field."
 }
-**Security Notes
-**This repository contains the fixed version of the application. The vulnerabilities documented in the blog series have been remediated.
+**Security Notes**
+This repository contains the fixed version of the application. The vulnerabilities documented in the blog series have been remediated.
 
 Known vulnerability (now fixed): The original code allowed arbitrary URL injection via the id parameter, which could enable SSRF attacks. The fixed version validates and sanitizes the input.
 
-**Development & Testing
-Running Scans (SAST/SCA)
-**To replicate the security scans discussed in the blog series:
+**Development & Testing**
+**Running Scans (SAST/SCA)**
+To replicate the security scans discussed in the blog series:
 
-**Semgrep (SAST/SCA):
-**
+**Semgrep (SAST/SCA):**
 
 # In the root directory
 semgrep --config p/default --config p/security-audit ./backend ./frontend
 (Note: Using local custom rules will provide more thorough results, as noted in the series.)
 
-**OWASP ZAP (DAST):
-**
+**OWASP ZAP (DAST):**
 Ensure the application is running on localhost:3000 and localhost:8080.
 
 Open ZAP and set the target URL to http://localhost:3000.
