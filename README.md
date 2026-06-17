@@ -48,8 +48,8 @@ Example Request:
 ```
 GET http://localhost:8080/joke?id=123
 
-Example Response:
 ```
+Example Response: 
 json
 {
   "id": 123,
